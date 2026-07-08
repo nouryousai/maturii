@@ -2,14 +2,12 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>クイズ こたえあわせ</title>
   <meta name="description" content="クイズ（3問）のこたえあわせページ" />
 
 <style>
   :root{
-    --bg1:#0b1020;
-    --bg2:#1a0b2e;
     --card: rgba(17, 20, 45, .78);
     --border: rgba(255,255,255,.10);
     --text:#f4f7ff;
@@ -17,11 +15,13 @@
     --danger:#ff6b6b;
     --ok:#51d38a;
 
-    /* ✅ 背景画像（同じフォルダに bg.jpg を置く） */
+    /* 背景画像（同じフォルダに bg.jpg） */
     --bgImage: url("bg.jpg");
   }
 
   *{ box-sizing:border-box; }
+  html, body{ height:100%; }
+
   body{
     margin:0;
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
@@ -29,7 +29,7 @@
     min-height: 100svh;
     overflow-x:hidden;
 
-    /* ✅ 背景画像＋夜背景演出 */
+    /* 背景（スマホでも重くなりにくい） */
     background:
       radial-gradient(900px 600px at 20% 5%, rgba(255, 209, 102, .25) 0%, rgba(255, 209, 102, 0) 60%),
       radial-gradient(900px 600px at 85% 0%, rgba(122, 162, 255, .20) 0%, rgba(122, 162, 255, 0) 55%),
@@ -38,7 +38,8 @@
       var(--bgImage);
     background-size: cover;
     background-position: center;
-    background-attachment: fixed;
+    /* ✅ iOSでカクつきやすいので固定はやめる（PCのみ後でON） */
+    background-attachment: scroll;
   }
 
   /* 薄い和柄っぽいパターン */
@@ -54,13 +55,20 @@
     mix-blend-mode: screen;
   }
 
-  .wrap{ max-width: 980px; margin: 0 auto; padding: 18px; position:relative; z-index:2; }
+  /* ✅ スマホ優先の余白 */
+  .wrap{
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 14px;
+    position:relative;
+    z-index:2;
+  }
 
   header{
-    padding: 18px 16px;
+    padding: 16px 14px;
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 18px;
+    border-radius: 16px;
     backdrop-filter: blur(10px);
     position:relative;
     overflow:hidden;
@@ -72,40 +80,69 @@
     background: linear-gradient(90deg, rgba(255,209,102,.25), rgba(122,162,255,.22), rgba(255,107,107,.18));
     filter: blur(18px);
   }
-  h1{ margin:0 0 6px 0; font-size: 22px; letter-spacing:.02em; position:relative; z-index:1; }
-  .sub{ margin:0; color:var(--muted); font-size: 14px; position:relative; z-index:1; }
+  h1{
+    margin:0 0 6px 0;
+    font-size: 20px;
+    letter-spacing:.02em;
+    position:relative; z-index:1;
+  }
+  .sub{
+    margin:0;
+    color:var(--muted);
+    font-size: 13px;
+    position:relative; z-index:1;
+  }
 
-  .grid{ display:grid; grid-template-columns: 1fr; gap: 14px; margin-top: 14px; }
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 12px;
+  }
+
   .card{
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 16px;
+    border-radius: 16px;
+    padding: 14px;
     backdrop-filter: blur(10px);
   }
 
-  .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
+  .row{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+  }
   .note{ color: var(--muted); font-size: 13px; line-height:1.7; }
 
+  /* ✅ タップしやすいボタン */
   .btn{
     appearance:none; border:none; cursor:pointer;
     padding: 12px 14px; border-radius: 12px;
     background: linear-gradient(135deg, #ffd166, #ffb703);
     color: #1a1305; font-weight: 900;
+    min-height: 44px;
   }
   .btn2{
     appearance:none; border:1px solid rgba(255,255,255,.16); cursor:pointer;
-    padding: 10px 12px; border-radius: 12px;
+    padding: 12px 14px; border-radius: 12px;
     background: rgba(255,255,255,.06);
-    color: var(--text); font-weight: 700;
+    color: var(--text); font-weight: 800;
+    min-height: 44px;
   }
 
+  /* ✅ 入力欄は常に全幅に寄せる */
   input{
-    padding: 10px 12px; border-radius: 12px;
+    padding: 12px 12px;
+    border-radius: 12px;
     border: 1px solid rgba(255,255,255,.18);
     background: rgba(0,0,0,.18);
     color: var(--text);
-    width: min(520px, 100%);
+    width: 100%;
+    max-width: 100%;
+    min-height: 44px;
   }
 
   .qaList{ margin-top: 10px; display: grid; gap: 12px; }
@@ -115,7 +152,7 @@
     border-radius: 14px;
     padding: 12px;
   }
-  .qTitle{ font-weight: 1000; margin-bottom: 8px; }
+  .qTitle{ font-weight: 1000; margin-bottom: 10px; }
   .ansRow{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
   .result{ font-weight: 1000; }
   .ok{ color: var(--ok); }
@@ -135,7 +172,12 @@
   }
   .scoreText{ font-weight: 1000; }
 
-  footer{ margin: 18px 0 24px; color: rgba(255,255,255,.55); font-size: 12px; text-align:center; }
+  footer{
+    margin: 16px 0 22px;
+    color: rgba(255,255,255,.55);
+    font-size: 12px;
+    text-align:center;
+  }
 
   /* 花火演出用 */
   #fx{
@@ -154,31 +196,23 @@
     backdrop-filter: blur(4px);
     color: #fff;
   }
-  #congratsTop{
-    position:absolute; left:0; right:0; top:0;
-    padding: 20px;
-    text-align:center;
-  }
+  #congratsTop{ position:absolute; left:0; right:0; top:0; padding: 18px; text-align:center; }
   #congratsTitle{
-    font-size: clamp(36px, 7vw, 84px);
+    font-size: clamp(34px, 9vw, 72px);
     font-weight: 1000;
     letter-spacing: .04em;
     text-shadow: 0 10px 40px rgba(0,0,0,.55);
     margin: 10px 0 6px;
   }
-  #congratsSub{
-    color: rgba(255,255,255,.85);
-    font-weight: 700;
-    margin:0;
-  }
+  #congratsSub{ color: rgba(255,255,255,.85); font-weight: 800; margin:0; }
   #roll{
     position:absolute;
     left:50%;
     transform:translateX(-50%);
-    width: min(680px, calc(100% - 40px));
+    width: min(680px, calc(100% - 28px));
     bottom: -40%;
     text-align:center;
-    font-size: 18px;
+    font-size: 16px;      /* ✅ スマホで読みやすく */
     line-height: 1.9;
     color: rgba(255,255,255,.92);
     animation: rollUp 18s linear forwards;
@@ -189,24 +223,15 @@
     to   { bottom: 110%; }
   }
   .closeRow{
-    position:absolute; left:0; right:0; bottom:18px;
+    position:absolute; left:0; right:0; bottom: max(18px, env(safe-area-inset-bottom));
     display:flex; justify-content:center; gap:10px;
+    padding: 0 14px;
   }
 
   /* 🌈 虹色テキスト */
   #congratsTitle,
   #congratsSub{
-    background: linear-gradient(
-      90deg,
-      #ff4d4d,
-      #ffb703,
-      #ffd166,
-      #51d38a,
-      #2dd4ff,
-      #7aa2ff,
-      #c77dff,
-      #ff4d4d
-    );
+    background: linear-gradient(90deg,#ff4d4d,#ffb703,#ffd166,#51d38a,#2dd4ff,#7aa2ff,#c77dff,#ff4d4d);
     background-size: 300% 100%;
     -webkit-background-clip: text;
     background-clip: text;
@@ -215,10 +240,77 @@
     animation: rainbowMove 3s linear infinite;
     text-shadow: 0 10px 40px rgba(0,0,0,.45);
   }
-
   @keyframes rainbowMove{
     0%   { background-position: 0% 50%; }
     100% { background-position: 100% 50%; }
+  }
+
+  /* ===== タブUI ===== */
+  .tabs{
+    display:flex;
+    gap:10px;
+    margin-top:12px;
+  }
+  .tabBtn{
+    flex:1;                 /* ✅ スマホは2つを横並びで均等 */
+    appearance:none;
+    border:1px solid rgba(255,255,255,.16);
+    cursor:pointer;
+    padding: 12px 12px;
+    border-radius: 12px;
+    background: rgba(255,255,255,.06);
+    color: var(--text);
+    font-weight: 900;
+    min-height: 44px;
+  }
+  .tabBtn.active{
+    background: linear-gradient(135deg, #ffd166, #ffb703);
+    color: #1a1305;
+    border-color: transparent;
+  }
+
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+
+  /* ===== タイムテーブル（スマホ向けにテーブル→カード風） ===== */
+  .ttList{
+    margin-top:10px;
+    display:grid;
+    gap:10px;
+  }
+  .ttItem{
+    border: 1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.03);
+    border-radius: 14px;
+    padding: 12px;
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+  }
+  .ttTime{
+    min-width: 74px;
+    font-weight: 1000;
+    color: rgba(255,255,255,.92);
+  }
+  .ttBody{
+    flex:1;
+    font-weight: 800;
+  }
+  .ttHint{
+    margin-top:8px;
+    color: rgba(255,255,255,.55);
+    font-size: 12px;
+  }
+
+  /* ✅ 画面が広い端末では少しリッチに */
+  @media (min-width: 760px){
+    body{ background-attachment: fixed; }
+    .wrap{ padding: 18px; }
+    h1{ font-size: 22px; }
+    .tabs{ max-width: 520px; }
+    .tabBtn{ flex: 0 0 auto; }
+    .tabBtn + .tabBtn{ min-width: 180px; }
+    #roll{ font-size: 18px; }
   }
 </style>
 
@@ -257,9 +349,15 @@
       <p class="sub">君はこたえがわかるかな？</p>
     </header>
 
+    <!-- タブ -->
+    <div class="tabs" role="tablist" aria-label="ページ切り替え">
+      <button class="tabBtn active" data-tab="quiz" type="button" role="tab" aria-selected="true">クイズ</button>
+      <button class="tabBtn" data-tab="timetable" type="button" role="tab" aria-selected="false">タイムテーブル</button>
+    </div>
+
     <div class="grid">
-      <!-- クイズだけ -->
-      <section class="card" id="panelQuiz">
+      <!-- クイズ -->
+      <section class="card panel active" id="panelQuiz">
         <div class="row">
           <div>
             <div style="font-weight:900;">こたえをいれてね</div>
@@ -274,6 +372,41 @@
           <div class="scoreText" id="scoreText">まだ採点していません</div>
           <button class="btn2" id="resetBtn" type="button">入力をリセット</button>
         </div>
+      </section>
+
+      <!-- タイムテーブル（スマホ向け：カード表示 / 場所なし） -->
+      <section class="card panel" id="panelTimetable">
+        <div class="row">
+          <div>
+            <div style="font-weight:900;">タイムテーブル</div>
+            <div class="note">当日の進行は変更になる場合があります</div>
+          </div>
+        </div>
+
+        <div class="ttList" aria-label="タイムテーブル">
+          <div class="ttItem">
+            <div class="ttTime">16:30</div>
+            <div class="ttBody">開会の挨拶</div>
+          </div>
+          <div class="ttItem">
+            <div class="ttTime">２</div>
+            <div class="ttBody">乾杯</div>
+          </div>
+          <div class="ttItem">
+            <div class="ttTime">３</div>
+            <div class="ttBody">ゲーム（何をやるかは当日のお楽しみ）</div>
+          </div>
+          <div class="ttItem">
+            <div class="ttTime">４</div>
+            <div class="ttBody">抽選会</div>
+          </div>
+          <div class="ttItem">
+            <div class="ttTime">18:30</div>
+            <div class="ttBody">閉会の挨拶</div>
+          </div>
+        </div>
+
+        <div class="ttHint">※時間は目安です。</div>
       </section>
     </div>
 
@@ -291,7 +424,6 @@
   };
   // ==============================
 
-  // HTMLエスケープ
   function escapeHtml(str){
     return String(str ?? "")
       .replaceAll("&","&amp;")
@@ -301,7 +433,6 @@
       .replaceAll("'","&#39;");
   }
 
-  // 正規化（空白無視＋大小無視）
   function normalize(s){
     return String(s ?? "")
       .trim()
@@ -334,7 +465,6 @@
   }
   renderQuiz();
 
-  // スコア表示
   const scoreText = document.getElementById("scoreText");
 
   // こたえあわせ
@@ -358,7 +488,6 @@
     const total = SETTINGS.quiz.length;
     scoreText.textContent = `結果：${correct} / ${total} 正解`;
 
-    // ✅ 全問正解で特別演出
     if(correct === total){
       startFireworks(6500);
       showCongrats();
@@ -476,13 +605,32 @@
     congratsOverlay.style.display = "block";
     const roll = document.getElementById("roll");
     roll.style.animation = "none";
-    void roll.offsetWidth; // reflow
+    void roll.offsetWidth;
     roll.style.animation = "";
   }
   function hideCongrats(){
     congratsOverlay.style.display = "none";
   }
   closeCongratsBtn.addEventListener("click", hideCongrats);
+
+  // ===== タブ切り替え =====
+  const tabBtns = document.querySelectorAll(".tabBtn");
+  const panelQuiz = document.getElementById("panelQuiz");
+  const panelTimetable = document.getElementById("panelTimetable");
+
+  function setTab(name){
+    tabBtns.forEach(b => {
+      const isActive = (b.dataset.tab === name);
+      b.classList.toggle("active", isActive);
+      b.setAttribute("aria-selected", isActive ? "true" : "false");
+    });
+
+    panelQuiz.classList.toggle("active", name === "quiz");
+    panelTimetable.classList.toggle("active", name === "timetable");
+  }
+
+  tabBtns.forEach(b => b.addEventListener("click", () => setTab(b.dataset.tab)));
 </script>
 </body>
 </html>
+
